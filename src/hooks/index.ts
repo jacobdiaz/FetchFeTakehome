@@ -4,7 +4,10 @@ import { isValidEmail } from "../utils";
 
 export const useForm = (callback: Function, initialState: FormValues) => {
   const [values, setValues] = useState(initialState);
-  const [isLoading, setIsLoading] = useState(false);
+  const isValidInputs =
+    isValidEmail(values.Email) &&
+    values.Email.length &&
+    values.Password.length > 3;
 
   const onChange = (
     event:
@@ -13,22 +16,29 @@ export const useForm = (callback: Function, initialState: FormValues) => {
   ) => {
     let currValidInputs = false;
     // Check if valid inputs
-    if (
-      isValidEmail(values.Email) &&
-      values.Email.length &&
-      values.Password.length > 3
-    ) {
+    if (isValidInputs) {
       currValidInputs = true;
     }
 
-    // Set new value
-    setValues({
-      ...values,
-      [event.currentTarget.name]: event.currentTarget.value,
-      hasValidInputs: currValidInputs,
-    });
+    // If the changed input is state create an object
+    if (event.currentTarget.name === "State") {
+      setValues({
+        ...values,
+        [event.currentTarget.name]: {
+          name: event.currentTarget.value,
+          abbreviation: event.currentTarget.value,
+        },
+        hasValidInputs: currValidInputs,
+      });
+    } else {
+      setValues({
+        ...values,
+        [event.currentTarget.name]: event.currentTarget.value,
+        hasValidInputs: currValidInputs,
+      });
+    }
 
-    console.log(values);
+    // console.log(values);
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,6 +50,5 @@ export const useForm = (callback: Function, initialState: FormValues) => {
     onChange,
     onSubmit,
     values,
-    isLoading,
   };
 };

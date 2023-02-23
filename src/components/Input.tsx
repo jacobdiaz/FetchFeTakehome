@@ -1,5 +1,5 @@
 type HTMLInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  varient?: "Email" | "Password";
+  varient?: string;
 };
 
 const Input = (props: HTMLInputProps) => {
