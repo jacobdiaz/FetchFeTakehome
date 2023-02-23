@@ -1,5 +1,10 @@
+import Login from "./pages/Login";
 function App() {
-  return <div className='App'></div>;
+  return (
+    <div className='flex justify-center items-center h-screen'>
+      <Login />
+    </div>
+  );
 }
 
 export default App;
