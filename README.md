@@ -16,8 +16,8 @@ http://jacobdiazfetchfechallenge.s3-website-us-east-1.amazonaws.com/
 -   Have its soure code stored in a code repository
 -   Be hosted on the internet
 ## Dependencies Used
-
- - `daisyui` - CSS Framework
+ - `tailwindcss` - CSS Frameword
+ - `daisyui` - Tailwind Library
  - `axios` - HTTP Requests
  - `bcryptjs-react` - Password Encryption / Decryption
 
