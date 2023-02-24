@@ -1,11 +1,11 @@
-type Props = {
-  data: Object;
+type AlertProps = {
+  status: number | undefined;
 };
-
-const Alert = (props: Props) => {
+const Alert = ({ status }: AlertProps) => {
+  const alertClass = status === 201 ? "alert-success" : "alert-error";
   return (
-    <div className='flex justify-center absolute w-2/6 bottom-10 left-0 w-screen '>
-      <div className='alert alert-success shadow-lg w-2/6 '>
+    <div className='flex justify-center absolute bottom-10 left-0 w-screen '>
+      <div className={`alert ${alertClass} shadow-lg w-fit`}>
         <div>
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -20,7 +20,14 @@ const Alert = (props: Props) => {
               d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
             />
           </svg>
-          <span>You have Successfully Logged In!</span>
+
+          <span>
+            {" "}
+            (StatusCode: {status})
+            {status === 201
+              ? " You have Successfully Logged In!"
+              : " Oops there was an error"}
+          </span>
         </div>
       </div>
     </div>

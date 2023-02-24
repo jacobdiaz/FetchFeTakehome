@@ -10,10 +10,10 @@ import bcrypt from "bcryptjs-react";
 
 type Props = {
   showAlert3s: () => void;
-  setAlertData: (data: Object) => void;
+  setAlertStatus: (status: number) => void;
 };
 
-const LoginForm = ({ showAlert3s, setAlertData }: Props) => {
+const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
   const handleSubmit = async () => {
     var encryptedPassword = await bcrypt.hash(values.Password, 10);
     await axios
@@ -24,7 +24,12 @@ const LoginForm = ({ showAlert3s, setAlertData }: Props) => {
         occupation: values.Occupation,
         state: values.State,
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res.status);
+
+        setAlertStatus(res.status);
+        showAlert3s();
+      })
       .catch((err) => {});
   };
 
