@@ -2,21 +2,31 @@ import { useEffect, useState } from "react";
 import { FormValues } from "../types";
 import { isValidEmail } from "../utils";
 
-export const useForm = (callback: Function, initialState: FormValues) => {
+export const useForm = (
+  callback: Function,
+  initialState: FormValues = {
+    Email: "",
+    Name: "",
+    Password: "",
+    Occupation: "",
+    State: {},
+    hasValidInputs: false,
+  }
+) => {
   const [values, setValues] = useState(initialState);
   const [isValidInputs, setIsValidInputs] = useState(false);
 
+  // When values changes, check if the inputs are valid
   useEffect(() => {
-    const criteria: boolean = Boolean(
-      isValidEmail(values.Email) &&
-        values.Email.length &&
-        values.Password.length > 3 &&
-        values.Occupation.length &&
-        values.State
+    setIsValidInputs(
+      Boolean(
+        isValidEmail(values.Email) &&
+          values.Email.length &&
+          values.Password.length > 3 &&
+          values.Occupation.length &&
+          values.State
+      )
     );
-    // Check if the inputs are valid
-    setIsValidInputs(criteria);
-    console.log("criteria", criteria, values);
   }, [values]);
 
   const onChange = (
@@ -24,21 +34,17 @@ export const useForm = (callback: Function, initialState: FormValues) => {
       | React.FormEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
   ) => {
-    // If the changed input is state create an object
-    if (event.currentTarget.name === "State") {
-      setValues({
-        ...values,
-        [event.currentTarget.name]: {
-          name: event.currentTarget.value,
-          abbreviation: event.currentTarget.value,
-        },
-      });
-    } else {
-      setValues({
-        ...values,
-        [event.currentTarget.name]: event.currentTarget.value,
-      });
-    }
+    setValues({
+      ...values,
+      [event.currentTarget.name]:
+        // If the input is the State, then we need to set the value to an object
+        event.currentTarget.value === "State"
+          ? {
+              name: event.currentTarget.value,
+              abbreviation: event.currentTarget.value,
+            }
+          : event.currentTarget.value,
+    });
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {

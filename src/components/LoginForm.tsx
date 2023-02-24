@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Input from "../components/Input";
 import { useForm } from "../hooks";
-import { welcomeText } from "../utils";
 import { FORM_API } from "../api";
 import axios from "axios";
 import { State } from "../types";
@@ -15,6 +14,7 @@ type Props = {
 
 const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
   const handleSubmit = async () => {
+    // Encrypt the Password then send a POST request to the API
     var encryptedPassword = await bcrypt.hash(values.Password, 10);
     await axios
       .post(FORM_API, {
@@ -28,23 +28,20 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
         setAlertStatus(res.status);
         showAlert3s();
       })
-      .catch((err) => {});
+      .catch((err) => {
+        setAlertStatus(err.response.status);
+        showAlert3s();
+      });
   };
 
   const [stateOptions, setStateOptions] = useState<State[]>([]);
   const [occupationOptions, setOccupationOptions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { values, onChange, onSubmit, isValidInputs } = useForm(handleSubmit, {
-    Email: "",
-    Name: "",
-    Password: "",
-    Occupation: "",
-    State: {},
-    hasValidInputs: false,
-  });
+  const { values, onChange, onSubmit, isValidInputs } = useForm(handleSubmit);
 
   useEffect(() => {
+    // Fetch Ocucupation and State Options
     async function fetchFormOptions() {
       setIsLoading(true);
       const { data } = await axios.get(FORM_API);
@@ -66,11 +63,14 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
           onSubmit={onSubmit}
         >
           {<h1 className='font-black text-2xl'>Sign In</h1>}
-          <p className='my-6'>{welcomeText}</p>
+          <p className='my-6'>
+            Welcome to our platform! To access your account, please enter your
+            login details below. If you don't have an account.
+          </p>
+          {/* User input fields */}
           <Input varient='Name' onChange={onChange} />
           <Input varient='Email' onChange={onChange} />
           <Input varient='Password' onChange={onChange} />
-
           <div className='flex row'>
             <Dropdown
               options={occupationOptions}
@@ -83,20 +83,22 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
               onChange={onChange}
             />
           </div>
-
           <div
             className='tooltip tooltip-bottom'
-            data-tip={
-              !values.hasValidInputs ? "Please Insert Valid Inputs" : ""
-            }
+            data-tip={!isValidInputs ? "Please Insert Valid Inputs" : undefined}
           >
             <button
-              className='btn btn-primary w-full mt-8 disabled:opacity-40 disabled:bg-primary disabled:text-white'
+              className='btn btn-warning w-full mt-8 disabled:opacity-40 disabled:btn-warning disabled:text-white'
               type='submit'
               disabled={!isValidInputs}
             >
               Sign In
             </button>
+          </div>
+          {/* DEMO CREATE NEW ACCOUNT */}
+          <div className='divider text-xs'>OR</div>{" "}
+          <div className='flex justify-center items-center text-xs'>
+            <a className='opacity-50 hover:text-white'>Create a New Account</a>
           </div>
         </form>
       )}
