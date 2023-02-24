@@ -25,8 +25,6 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
         state: values.State,
       })
       .then((res) => {
-        console.log(res.status);
-
         setAlertStatus(res.status);
         showAlert3s();
       })
@@ -37,7 +35,7 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
   const [occupationOptions, setOccupationOptions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { values, onChange, onSubmit } = useForm(handleSubmit, {
+  const { values, onChange, onSubmit, isValidInputs } = useForm(handleSubmit, {
     Email: "",
     Name: "",
     Password: "",
@@ -69,8 +67,8 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
         >
           {<h1 className='font-black text-2xl'>Sign In</h1>}
           <p className='my-6'>{welcomeText}</p>
-          <Input varient='Email' onChange={onChange} />
           <Input varient='Name' onChange={onChange} />
+          <Input varient='Email' onChange={onChange} />
           <Input varient='Password' onChange={onChange} />
 
           <div className='flex row'>
@@ -95,7 +93,7 @@ const LoginForm = ({ showAlert3s, setAlertStatus }: Props) => {
             <button
               className='btn btn-primary w-full mt-8 disabled:opacity-40 disabled:bg-primary disabled:text-white'
               type='submit'
-              disabled={!values.hasValidInputs}
+              disabled={!isValidInputs}
             >
               Sign In
             </button>

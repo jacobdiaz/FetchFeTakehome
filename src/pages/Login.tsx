@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Alert from "../components/Alert";
 import LoginForm from "../components/LoginForm";
 
